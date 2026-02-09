@@ -1,14 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getProfile, putProfile, deleteProfile } from "@/lib/dynamodb";
+import { deleteProfile, getProfile, putProfile } from "@/lib/dynamodb";
 import { UserProfile } from "@/types/profile";
+import { NextRequest, NextResponse } from "next/server";
 
 // GET /api/profiles/[phoneNumber] - Get a specific profile
 export async function GET(
   request: NextRequest,
-  { params }: { params: { phoneNumber: string } }
+  { params }: { params: Promise<{ phoneNumber: string }> }
 ) {
   try {
-    const phoneNumber = decodeURIComponent(params.phoneNumber);
+    const { phoneNumber: rawPhoneNumber } = await params;
+    const phoneNumber = decodeURIComponent(rawPhoneNumber);
     const profile = await getProfile(phoneNumber);
 
     if (!profile) {
@@ -28,10 +29,11 @@ export async function GET(
 // PUT /api/profiles/[phoneNumber] - Update a profile
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { phoneNumber: string } }
+  { params }: { params: Promise<{ phoneNumber: string }> }
 ) {
   try {
-    const phoneNumber = decodeURIComponent(params.phoneNumber);
+    const { phoneNumber: rawPhoneNumber } = await params;
+    const phoneNumber = decodeURIComponent(rawPhoneNumber);
     const profile: UserProfile = await request.json();
 
     // Ensure phone number matches
@@ -56,10 +58,11 @@ export async function PUT(
 // DELETE /api/profiles/[phoneNumber] - Delete a profile
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { phoneNumber: string } }
+  { params }: { params: Promise<{ phoneNumber: string }> }
 ) {
   try {
-    const phoneNumber = decodeURIComponent(params.phoneNumber);
+    const { phoneNumber: rawPhoneNumber } = await params;
+    const phoneNumber = decodeURIComponent(rawPhoneNumber);
     await deleteProfile(phoneNumber);
     return NextResponse.json({ success: true });
   } catch (error) {
