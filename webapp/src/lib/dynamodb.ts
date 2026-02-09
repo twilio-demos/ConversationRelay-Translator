@@ -1,5 +1,6 @@
 import { UserProfile } from "@/types/profile";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { awsCredentialsProvider } from '@vercel/oidc-aws-credentials-provider';
 import {
   DeleteCommand,
   DynamoDBDocumentClient,
@@ -10,6 +11,7 @@ import {
 
 const client = new DynamoDBClient({
   region: process.env.AWS_REGION || "us-east-1",
+  ...(process.env.AWS_ROLE_ARN ? { credentials: awsCredentialsProvider({ roleArn: process.env.AWS_ROLE_ARN }) } : {})
 });
 
 const docClient = DynamoDBDocumentClient.from(client);
