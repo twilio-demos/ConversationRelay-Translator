@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useConversation } from "@/hooks/use-conversation";
 import { ConversationMessage } from "@/types/profile";
@@ -98,11 +99,7 @@ export const Conversation = ({ serverConversation }: ConversationProps) => {
               </p>
               <div className="flex gap-2">
                 {Array.from(languages).map((lang) => (
-                  <span
-                    key={lang}
-                    className="px-2 py-1 rounded text-sm bg-gray-200 font-medium">
-                    {lang}
-                  </span>
+                  <Badge key={lang}>{lang}</Badge>
                 ))}
               </div>
             </div>
