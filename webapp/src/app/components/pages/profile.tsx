@@ -1,18 +1,13 @@
 "use client";
 
 import { ProfileForm } from "@/components/ProfileForm";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserProfile } from "@/types/profile";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 export type ClientProfilePageProps = {
   profile: UserProfile;
@@ -76,12 +71,6 @@ export default function ClientProfilePage({ profile }: ClientProfilePageProps) {
         </div>
         <h1 className="text-3xl font-bold mb-8">Edit Profile</h1>
         <ProfileForm profile={profile} onSubmit={handleUpdate} />
-        <Button
-          variant="link"
-          onClick={() => setIsEditing(false)}
-          className="mt-4">
-          Cancel
-        </Button>
       </div>
     );
   }
@@ -100,7 +89,9 @@ export default function ClientProfilePage({ profile }: ClientProfilePageProps) {
           <p className="text-muted-foreground mt-1">{profile.phoneNumber}</p>
         </div>
         <div className="flex space-x-3">
-          <Button onClick={() => setIsEditing(true)}>Edit Profile</Button>
+          <Button variant="default" onClick={() => setIsEditing(true)}>
+            Edit Profile
+          </Button>
           <Button
             onClick={handleDelete}
             disabled={isDeleting}
@@ -157,7 +148,9 @@ export default function ClientProfilePage({ profile }: ClientProfilePageProps) {
             <p className="text-sm text-muted-foreground">
               Custom Callee Details
             </p>
-            <Badge variant={profile.calleeDetails ? "default" : "secondary"} className="mt-1">
+            <Badge
+              variant={profile.calleeDetails ? "default" : "secondary"}
+              className="mt-1">
               {profile.calleeDetails ? "Enabled" : "Disabled"}
             </Badge>
           </div>
@@ -208,7 +201,9 @@ export default function ClientProfilePage({ profile }: ClientProfilePageProps) {
         <CardContent>
           <div className="mb-4">
             <p className="text-sm text-muted-foreground">Flex Enabled</p>
-            <Badge variant={profile.useFlex ? "default" : "secondary"} className="mt-1">
+            <Badge
+              variant={profile.useFlex ? "default" : "secondary"}
+              className="mt-1">
               {profile.useFlex ? "Enabled" : "Disabled"}
             </Badge>
           </div>

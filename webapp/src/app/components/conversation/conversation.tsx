@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useConversation } from "@/hooks/use-conversation";
 import { ConversationMessage } from "@/types/profile";
 import { ChatContainer, MessageList } from "@chatscope/chat-ui-kit-react";
@@ -44,7 +45,7 @@ export const Conversation = ({ serverConversation }: ConversationProps) => {
           <div>
             <Link
               href="/sessions"
-              className="text-sm text-blue-600 dark:text-blue-400 hover:underline mb-2 inline-block">
+              className="text-sm hover:underline mb-2 inline-block">
               ← Back to Sessions
             </Link>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
@@ -52,7 +53,8 @@ export const Conversation = ({ serverConversation }: ConversationProps) => {
             </h1>
           </div>
           <div className="flex gap-2">
-            <button
+            <Button
+              variant="outline"
               onClick={() => setIsPolling(!isPolling)}
               className={`px-4 py-2 rounded-lg transition-colors text-sm font-medium ${
                 isPolling
@@ -60,12 +62,13 @@ export const Conversation = ({ serverConversation }: ConversationProps) => {
                   : "bg-gray-400 text-white hover:bg-gray-500"
               }`}>
               {isPolling ? "● Live" : "○ Paused"}
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="outline"
               onClick={() => setShowTranslations(!showTranslations)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+              className="px-4 py-2 text-sm font-medium">
               {showTranslations ? "Hide" : "Show"} Translations
-            </button>
+            </Button>
           </div>
         </div>
 
