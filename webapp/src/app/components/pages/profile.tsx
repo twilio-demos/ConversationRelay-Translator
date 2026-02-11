@@ -191,39 +191,38 @@ export default function ClientProfilePage({ profile }: ClientProfilePageProps) {
             </div>
           </div>
         </CardContent>
-      </Card>
 
-      {/* Flex Settings */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Flex Settings</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="mb-4">
-            <p className="text-sm text-muted-foreground">Flex Enabled</p>
-            <Badge
-              variant={profile.useFlex ? "default" : "secondary"}
-              className="mt-1">
-              {profile.useFlex ? "Enabled" : "Disabled"}
-            </Badge>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="md:col-span-2">
-              <p className="text-sm text-muted-foreground">Flex Number</p>
-              <p className="text-base font-medium mt-1">
-                {profile.flexNumber || "Not set"}
-              </p>
+        <div className="px-6 pb-6">
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-semibold mb-4">Flex Settings</h3>
+            <div className="rounded-lg space-y-4">
+              <div>
+                <p className="text-sm text-muted-foreground">Flex Enabled</p>
+                <Badge
+                  variant={profile.useFlex ? "default" : "secondary"}
+                  className="mt-1">
+                  {profile.useFlex ? "Enabled" : "Disabled"}
+                </Badge>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="md:col-span-2">
+                  <p className="text-sm text-muted-foreground">Flex Number</p>
+                  <p className="text-base font-medium mt-1">
+                    {profile.flexNumber || "Not set"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">
+                    Flex Worker Handle
+                  </p>
+                  <p className="text-base font-medium mt-1">
+                    {profile.flexWorkerHandle || "Not set"}
+                  </p>
+                </div>
+              </div>
             </div>
-            <div>
-              <p className="text-sm text-muted-foreground">
-                Flex Worker Handle
-              </p>
-              <p className="text-base font-medium mt-1">
-                {profile.flexWorkerHandle || "Not set"}
-              </p>
-            </div>
           </div>
-        </CardContent>
+        </div>
       </Card>
     </div>
   );

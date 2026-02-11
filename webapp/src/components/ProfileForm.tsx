@@ -1,8 +1,8 @@
 "use client";
 
-import { LANGUAGES, UserProfile, VOICES } from "@/types/profile";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -12,13 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { LANGUAGES, UserProfile, VOICES } from "@/types/profile";
+import { useState } from "react";
 
 interface ProfileFormProps {
   profile?: UserProfile;
@@ -74,7 +69,8 @@ export function ProfileForm({ profile, onSubmit }: ProfileFormProps) {
     if (!language) return;
 
     // Get the first available voice for the new language
-    const availableVoices = VOICES[language.translateCode as keyof typeof VOICES];
+    const availableVoices =
+      VOICES[language.translateCode as keyof typeof VOICES];
     const defaultVoice = availableVoices?.[0] || "";
 
     // Update all fields in a single state update
@@ -144,7 +140,9 @@ export function ProfileForm({ profile, onSubmit }: ProfileFormProps) {
               <Label htmlFor="sourceLanguage">Language</Label>
               <Select
                 value={formData.sourceLanguage}
-                onValueChange={(value) => handleLanguageChange("source", value)}>
+                onValueChange={(value) =>
+                  handleLanguageChange("source", value)
+                }>
                 <SelectTrigger id="sourceLanguage">
                   <SelectValue />
                 </SelectTrigger>
@@ -166,18 +164,20 @@ export function ProfileForm({ profile, onSubmit }: ProfileFormProps) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {VOICES[formData.sourceLanguageCode as keyof typeof VOICES]?.map(
-                    (voice) => (
-                      <SelectItem key={voice} value={voice}>
-                        {voice}
-                      </SelectItem>
-                    )
-                  )}
+                  {VOICES[
+                    formData.sourceLanguageCode as keyof typeof VOICES
+                  ]?.map((voice) => (
+                    <SelectItem key={voice} value={voice}>
+                      {voice}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="sourceTranscriptionProvider">Transcription Provider</Label>
+              <Label htmlFor="sourceTranscriptionProvider">
+                Transcription Provider
+              </Label>
               <Select
                 value={formData.sourceTranscriptionProvider}
                 onValueChange={(value) =>
@@ -196,7 +196,9 @@ export function ProfileForm({ profile, onSubmit }: ProfileFormProps) {
               <Label htmlFor="sourceTtsProvider">TTS Provider</Label>
               <Select
                 value={formData.sourceTtsProvider}
-                onValueChange={(value) => updateField("sourceTtsProvider", value)}>
+                onValueChange={(value) =>
+                  updateField("sourceTtsProvider", value)
+                }>
                 <SelectTrigger id="sourceTtsProvider">
                   <SelectValue />
                 </SelectTrigger>
@@ -246,7 +248,9 @@ export function ProfileForm({ profile, onSubmit }: ProfileFormProps) {
               <Label htmlFor="calleeLanguage">Language</Label>
               <Select
                 value={formData.calleeLanguage}
-                onValueChange={(value) => handleLanguageChange("callee", value)}>
+                onValueChange={(value) =>
+                  handleLanguageChange("callee", value)
+                }>
                 <SelectTrigger id="calleeLanguage">
                   <SelectValue />
                 </SelectTrigger>
@@ -268,18 +272,20 @@ export function ProfileForm({ profile, onSubmit }: ProfileFormProps) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {VOICES[formData.calleeLanguageCode as keyof typeof VOICES]?.map(
-                    (voice) => (
-                      <SelectItem key={voice} value={voice}>
-                        {voice}
-                      </SelectItem>
-                    )
-                  )}
+                  {VOICES[
+                    formData.calleeLanguageCode as keyof typeof VOICES
+                  ]?.map((voice) => (
+                    <SelectItem key={voice} value={voice}>
+                      {voice}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="calleeTranscriptionProvider">Transcription Provider</Label>
+              <Label htmlFor="calleeTranscriptionProvider">
+                Transcription Provider
+              </Label>
               <Select
                 value={formData.calleeTranscriptionProvider}
                 onValueChange={(value) =>
@@ -298,7 +304,9 @@ export function ProfileForm({ profile, onSubmit }: ProfileFormProps) {
               <Label htmlFor="calleeTtsProvider">TTS Provider</Label>
               <Select
                 value={formData.calleeTtsProvider}
-                onValueChange={(value) => updateField("calleeTtsProvider", value)}>
+                onValueChange={(value) =>
+                  updateField("calleeTtsProvider", value)
+                }>
                 <SelectTrigger id="calleeTtsProvider">
                   <SelectValue />
                 </SelectTrigger>
@@ -310,49 +318,50 @@ export function ProfileForm({ profile, onSubmit }: ProfileFormProps) {
             </div>
           </div>
         </CardContent>
-      </Card>
 
-      {/* Flex Settings */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Twilio Flex Settings</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="mb-4 flex items-center space-x-2">
-            <Checkbox
-              id="useFlex"
-              checked={formData.useFlex}
-              onCheckedChange={(checked) => updateField("useFlex", checked)}
-            />
-            <Label
-              htmlFor="useFlex"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              Use Twilio Flex
-            </Label>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="flexWorkerHandle">Flex Worker Handle</Label>
-              <Input
-                id="flexWorkerHandle"
-                type="text"
-                value={formData.flexWorkerHandle}
-                onChange={(e) => updateField("flexWorkerHandle", e.target.value)}
-                placeholder="worker@example.com"
-              />
+        <div className="px-6 pb-6">
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-semibold mb-4">Flex Settings</h3>
+            <div className="rounded-lg space-y-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="useFlex"
+                  checked={formData.useFlex}
+                  onCheckedChange={(checked) => updateField("useFlex", checked)}
+                />
+                <Label
+                  htmlFor="useFlex"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Use Twilio Flex
+                </Label>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="md:col-span-2 space-y-2">
+                  <Label htmlFor="flexNumber">Flex Number</Label>
+                  <Input
+                    id="flexNumber"
+                    type="tel"
+                    value={formData.flexNumber || ""}
+                    onChange={(e) => updateField("flexNumber", e.target.value)}
+                    placeholder="+1234567890"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="flexWorkerHandle">Flex Worker Handle</Label>
+                  <Input
+                    id="flexWorkerHandle"
+                    type="text"
+                    value={formData.flexWorkerHandle}
+                    onChange={(e) =>
+                      updateField("flexWorkerHandle", e.target.value)
+                    }
+                    placeholder="worker@example.com"
+                  />
+                </div>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="flexNumber">Flex Number</Label>
-              <Input
-                id="flexNumber"
-                type="tel"
-                value={formData.flexNumber || ""}
-                onChange={(e) => updateField("flexNumber", e.target.value)}
-                placeholder="+1234567890"
-              />
-            </div>
           </div>
-        </CardContent>
+        </div>
       </Card>
 
       <div className="flex justify-end space-x-4">
