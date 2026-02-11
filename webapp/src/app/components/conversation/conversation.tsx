@@ -10,7 +10,6 @@ export type ConversationProps = {
 };
 
 export const Conversation = ({ serverConversation }: ConversationProps) => {
-  console.log({ serverConversation });
   const {
     conversation,
     isPolling,
@@ -18,16 +17,12 @@ export const Conversation = ({ serverConversation }: ConversationProps) => {
     showTranslations,
     setShowTranslations,
     conversationId,
-    calleeMessages,
-    callerMessages,
     languages,
     session,
   } = useConversation(
     serverConversation || [],
     serverConversation?.[0]?.conversationId || ""
   );
-
-  console.log(session);
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -80,22 +75,6 @@ export const Conversation = ({ serverConversation }: ConversationProps) => {
                 {conversation.length}
               </p>
             </div>
-            <div>
-              <p className="text-gray-600 dark:text-gray-400">
-                Caller Messages
-              </p>
-              <p className="text-lg font-semibold text-blue-600 dark:text-blue-400">
-                {callerMessages}
-              </p>
-            </div>
-            <div>
-              <p className="text-gray-600 dark:text-gray-400">
-                Callee Messages
-              </p>
-              <p className="text-lg font-semibold text-green-600 dark:text-green-400">
-                {calleeMessages}
-              </p>
-            </div>
           </div>
 
           {languages.size > 0 && (
@@ -107,7 +86,7 @@ export const Conversation = ({ serverConversation }: ConversationProps) => {
                 {Array.from(languages).map((lang) => (
                   <span
                     key={lang}
-                    className="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 rounded text-xs font-medium">
+                    className="px-2 py-1 rounded text-sm bg-gray-700 font-medium">
                     {lang}
                   </span>
                 ))}

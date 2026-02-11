@@ -38,8 +38,8 @@ export const lambdaHandler = async (event, context) => {
     let agentContext = {};
 
     if (
-      snsPayload?.calleeDetails &&
-      Boolean(snsPayload?.calleeDetails) === true
+      snsPayload?.useFlex ||
+      (snsPayload?.calleeDetails && Boolean(snsPayload?.calleeDetails) === true)
     ) {
       /**
        * If calleeDetails boolean is present, that means that the

@@ -11,6 +11,5 @@ export default async function ConversationPage({
   const urlParams = await params;
   const conversation = await getConversation(decodeURIComponent(urlParams.id));
 
-  console.log({ conversation });
   return <ClientConversation conversation={conversation} />;
 }

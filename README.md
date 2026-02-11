@@ -27,6 +27,43 @@ Your profile has several configurable options for both the **Caller** (you) and 
 - **TTS Provider**: Provider used for text-to-speech to them (Amazon or Google)
 - **Phone Number**: The phone number of the person to call
 
+## Deploy Yourself
+
+This will walk you through a short guide on how to deploy the CloudFormation stack needed in this application
+
+### Sam Configuration
+
+Ensure that you have the [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html) installed before doing this
+
+Create a `samconfig.toml` file
+
+```toml
+version = 0.1
+
+[default.deploy.parameters]
+stack_name = "<name>"
+region = "<region>"
+parameter_overrides = [
+    "TwilioAccountSid=<account_sid>"
+    "TwilioAuthToken=<auth_token>"
+    "AgentPhoneNumber=<number>" # optional default value
+    "DefaultPhoneNumber=<number>" # optional default value
+    "FlexNumber=<number" # optional default value
+]
+```
+
+Due to Twilio policy restrictions you must create a bucket beforehand in S3.
+
+Build your SAM template and deploy it
+
+```bash
+sam build && sam deploy --capabilities CAPABILITY_NAMED_IAM --s3-bucket <your_bucket_name>
+```
+
+This will output some text that you will need to setup the POST method for your phone number
+
+![setup phone](/docs/images/phone-setup-post.png)
+
 ### Flex (optional)
 
 This application is also able to be used in Flex. By creating a Studio Flow with a handoff to Flex, you can utilize the translation with your Flex agents.
@@ -112,40 +149,3 @@ Finally, set that same phone number as the `Flex Number` in your profile.
 There is a plugin that can be combined with this in order to view your live translations in Flex.
 
 Visit this [link](https://github.com/twilio-demos/flex-live-translation-plugin) to learn how to set it up
-
-## Deploy Yourself
-
-This will walk you through a short guide on how to deploy the CloudFormation stack needed in this application
-
-### Sam Configuration
-
-Ensure that you have the [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html) installed before doing this
-
-Create a `samconfig.toml` file
-
-```toml
-version = 0.1
-
-[default.deploy.parameters]
-stack_name = "<name>"
-region = "<region>"
-parameter_overrides = [
-    "TwilioAccountSid=<account_sid>"
-    "TwilioAuthToken=<auth_token>"
-    "AgentPhoneNumber=<number>" # optional default value
-    "DefaultPhoneNumber=<number>" # optional default value
-    "FlexNumber=<number" # optional default value
-]
-```
-
-Due to Twilio policy restrictions you must create a bucket beforehand in S3.
-
-Build your SAM template and deploy it
-
-```bash
-sam build && sam deploy --capabilities CAPABILITY_NAMED_IAM --s3-bucket <your_bucket_name>
-```
-
-This will output some text that you will need to setup the POST method for your phone number
-
-![setup phone](/docs/images/phone-setup-post.png)

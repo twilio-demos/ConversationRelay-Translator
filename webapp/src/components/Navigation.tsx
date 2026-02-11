@@ -1,8 +1,8 @@
 "use client";
 
+import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSession, signIn, signOut } from "next-auth/react";
 
 export function Navigation() {
   const pathname = usePathname();
@@ -12,6 +12,11 @@ export function Navigation() {
     { href: "/", label: "Home" },
     { href: "/profiles", label: "Profiles" },
     { href: "/sessions", label: "Sessions" },
+    {
+      href: "https://github.com/twilio-demos/ConversationRelay-Translator/blob/main/README.md",
+      label: "Guide",
+      target: "_blank",
+    },
   ];
 
   return (
@@ -20,8 +25,7 @@ export function Navigation() {
         <div className="flex items-center justify-between h-16">
           <Link
             href="/"
-            className="text-xl font-bold text-gray-900 dark:text-white"
-          >
+            className="text-xl font-bold text-gray-900 dark:text-white">
             CR Translator
           </Link>
 
@@ -32,12 +36,12 @@ export function Navigation() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  target={link.target}
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     isActive
                       ? "bg-gray-900 text-white dark:bg-gray-700"
                       : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  }`}
-                >
+                  }`}>
                   {link.label}
                 </Link>
               );
@@ -50,16 +54,14 @@ export function Navigation() {
                 </span>
                 <button
                   onClick={() => signOut()}
-                  className="px-3 py-2 rounded-md text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
-                >
+                  className="px-3 py-2 rounded-md text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors">
                   Sign Out
                 </button>
               </div>
             ) : (
               <button
                 onClick={() => signIn("google")}
-                className="px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-              >
+                className="px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors">
                 Sign In
               </button>
             )}

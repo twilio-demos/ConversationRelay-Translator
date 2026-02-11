@@ -57,7 +57,7 @@ export const LANGUAGES = [
   { code: "it-IT", friendly: "Italian - Italy", translateCode: "it" },
   { code: "pt-BR", friendly: "Portuguese - Brazil", translateCode: "pt" },
   { code: "ja-JP", friendly: "Japanese - Japan", translateCode: "ja" },
-  { code: "zh-CN", friendly: "Chinese - Mandarin", translateCode: "zh" },
+  { code: "cmm-CN", friendly: "Chinese - Mandarin", translateCode: "cmm" },
 ];
 
 export const VOICES = {
@@ -70,6 +70,20 @@ export const VOICES = {
   es: ["Lupe-Generative", "Pedro-Generative", "Mia-Generative"],
   fr: ["Lea-Generative", "Remi-Generative"],
   de: ["Vicki-Generative", "Daniel-Generative"],
+  it: [
+    "Carla-Generative",
+    "Bianca-Generative",
+    "Giorgio-Generative",
+    "Adriano-Generative",
+  ],
+  pt: ["Camila-Generative", "Ricardo-Generative", "Thiago-Generative"],
+  jp: [
+    "Mizuki-Generative",
+    "Takumi-Generative",
+    "Kazuha-Generative",
+    "Tomoko-Generative",
+  ],
+  cmm: ["Zhiyu-Generative"],
 };
 
 export interface Session {

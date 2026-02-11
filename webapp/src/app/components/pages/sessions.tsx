@@ -66,12 +66,6 @@ export default function ClientSessionsPage({
           ))}
         </div>
       )}
-
-      <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-        <p className="text-sm text-blue-800 dark:text-blue-200">
-          <strong>Total Sessions:</strong> {sortedSessions.length}
-        </p>
-      </div>
     </div>
   );
 }
@@ -108,7 +102,7 @@ function SessionCard({ session }: { session: Session }) {
                   session.parentConnectionId || session.connectionId
                 }`}
                 onClick={(e) => e.stopPropagation()}
-                className="px-3 py-1 text-xs font-medium rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors">
+                className="px-3 py-1 text-xs font-medium rounded-full transition-colors cursor-pointer hover:underline">
                 View Conversation
               </Link>
             </div>
@@ -224,46 +218,6 @@ function SessionCard({ session }: { session: Session }) {
                 </div>
               </dl>
             </div>
-          </div>
-
-          {/* Additional Session Info */}
-          <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-            <dl className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-              <div>
-                <dt className="text-gray-600 dark:text-gray-400">Direction</dt>
-                <dd className="text-gray-900 dark:text-gray-100 capitalize">
-                  {session.direction || "N/A"}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-gray-600 dark:text-gray-400">
-                  Translation Active
-                </dt>
-                <dd className="text-gray-900 dark:text-gray-100">
-                  {session.translationActive ? "Yes" : "No"}
-                </dd>
-              </div>
-              {session.targetConnectionId && (
-                <div>
-                  <dt className="text-gray-600 dark:text-gray-400">
-                    Target Connection
-                  </dt>
-                  <dd className="text-gray-900 dark:text-gray-100 font-mono text-xs truncate">
-                    {session.targetConnectionId}
-                  </dd>
-                </div>
-              )}
-              {session.parentConnectionId && (
-                <div>
-                  <dt className="text-gray-600 dark:text-gray-400">
-                    Parent Connection
-                  </dt>
-                  <dd className="text-gray-900 dark:text-gray-100 font-mono text-xs truncate">
-                    {session.parentConnectionId}
-                  </dd>
-                </div>
-              )}
-            </dl>
           </div>
         </div>
       )}

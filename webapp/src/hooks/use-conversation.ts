@@ -55,7 +55,6 @@ export const useConversation = (
 
         if (response.ok) {
           const data = await response.json();
-          console.log({ data });
           if (data && data.length > 0) {
             setConversation(data);
           }

@@ -1,7 +1,7 @@
 "use client";
 
+import { LANGUAGES, UserProfile, VOICES } from "@/types/profile";
 import { useState } from "react";
-import { UserProfile, LANGUAGES, VOICES } from "@/types/profile";
 
 interface ProfileFormProps {
   profile?: UserProfile;
@@ -56,19 +56,34 @@ export function ProfileForm({ profile, onSubmit }: ProfileFormProps) {
     const language = LANGUAGES.find((l) => l.code === languageCode);
     if (!language) return;
 
-    if (type === "source") {
-      updateField("sourceLanguage", language.code);
-      updateField("sourceLanguageCode", language.translateCode);
-      updateField("sourceLanguageFriendly", language.friendly);
-    } else {
-      updateField("calleeLanguage", language.code);
-      updateField("calleeLanguageCode", language.translateCode);
-      updateField("calleeLanguageFriendly", language.friendly);
-    }
+    // Get the first available voice for the new language
+    const availableVoices = VOICES[language.translateCode as keyof typeof VOICES];
+    const defaultVoice = availableVoices?.[0] || "";
+
+    // Update all fields in a single state update
+    setFormData((prev) => {
+      if (type === "source") {
+        return {
+          ...prev,
+          sourceLanguage: language.code,
+          sourceLanguageCode: language.translateCode,
+          sourceLanguageFriendly: language.friendly,
+          sourceVoice: defaultVoice,
+        };
+      } else {
+        return {
+          ...prev,
+          calleeLanguage: language.code,
+          calleeLanguageCode: language.translateCode,
+          calleeLanguageFriendly: language.friendly,
+          calleeVoice: defaultVoice,
+        };
+      }
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-8" noValidate>
       {/* Basic Info */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
         <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
@@ -116,8 +131,7 @@ export function ProfileForm({ profile, onSubmit }: ProfileFormProps) {
             <select
               value={formData.sourceLanguage}
               onChange={(e) => handleLanguageChange("source", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            >
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
               {LANGUAGES.map((lang) => (
                 <option key={lang.code} value={lang.code}>
                   {lang.friendly}
@@ -132,8 +146,7 @@ export function ProfileForm({ profile, onSubmit }: ProfileFormProps) {
             <select
               value={formData.sourceVoice}
               onChange={(e) => updateField("sourceVoice", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            >
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
               {VOICES[formData.sourceLanguageCode as keyof typeof VOICES]?.map(
                 (voice) => (
                   <option key={voice} value={voice}>
@@ -152,8 +165,7 @@ export function ProfileForm({ profile, onSubmit }: ProfileFormProps) {
               onChange={(e) =>
                 updateField("sourceTranscriptionProvider", e.target.value)
               }
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            >
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
               <option value="Deepgram">Deepgram</option>
               <option value="Google">Google</option>
             </select>
@@ -165,8 +177,7 @@ export function ProfileForm({ profile, onSubmit }: ProfileFormProps) {
             <select
               value={formData.sourceTtsProvider}
               onChange={(e) => updateField("sourceTtsProvider", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            >
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
               <option value="Amazon">Amazon</option>
               <option value="Google">Google</option>
             </select>
@@ -213,8 +224,7 @@ export function ProfileForm({ profile, onSubmit }: ProfileFormProps) {
             <select
               value={formData.calleeLanguage}
               onChange={(e) => handleLanguageChange("callee", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            >
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
               {LANGUAGES.map((lang) => (
                 <option key={lang.code} value={lang.code}>
                   {lang.friendly}
@@ -229,8 +239,7 @@ export function ProfileForm({ profile, onSubmit }: ProfileFormProps) {
             <select
               value={formData.calleeVoice}
               onChange={(e) => updateField("calleeVoice", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            >
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
               {VOICES[formData.calleeLanguageCode as keyof typeof VOICES]?.map(
                 (voice) => (
                   <option key={voice} value={voice}>
@@ -249,8 +258,7 @@ export function ProfileForm({ profile, onSubmit }: ProfileFormProps) {
               onChange={(e) =>
                 updateField("calleeTranscriptionProvider", e.target.value)
               }
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            >
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
               <option value="Deepgram">Deepgram</option>
               <option value="Google">Google</option>
             </select>
@@ -262,8 +270,7 @@ export function ProfileForm({ profile, onSubmit }: ProfileFormProps) {
             <select
               value={formData.calleeTtsProvider}
               onChange={(e) => updateField("calleeTtsProvider", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            >
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
               <option value="Amazon">Amazon</option>
               <option value="Google">Google</option>
             </select>
@@ -321,15 +328,13 @@ export function ProfileForm({ profile, onSubmit }: ProfileFormProps) {
         <button
           type="button"
           onClick={() => window.history.back()}
-          className="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-        >
+          className="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
           Cancel
         </button>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
-        >
+          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50">
           {isSubmitting ? "Saving..." : "Save Profile"}
         </button>
       </div>
