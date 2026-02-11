@@ -52,6 +52,18 @@ This will walk you through a short guide on how to deploy the CloudFormation sta
 
 Ensure that you have the [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html) installed before doing this
 
+Install dependencies
+
+```bash
+npm --prefix ./layers/layer-cr-twilio-client/nodejs install
+```
+
+Copy the AWS profile sample file and enter your AWS profile name into it
+
+```bash
+cp aws-profile.profile.sample aws-profile.profile
+```
+
 Create a `samconfig.toml` file
 
 ```toml
