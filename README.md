@@ -44,6 +44,7 @@ This will walk you through a short guide on how to deploy the CloudFormation sta
 - A Twilio phone number
 - AWS SAM CLI
 - An AWS account with appropriate permissions to deploy Lambdas, DynamoDB, Serverless HTTP APIs
+- A Twilio Flex account (optional)
 - Flex workflow and Queue (optional)
 - Another Twilio phone number (optional, if using Flex)
 
