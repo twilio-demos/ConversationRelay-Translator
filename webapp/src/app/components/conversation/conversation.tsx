@@ -2,14 +2,19 @@
 
 import { useConversation } from "@/hooks/use-conversation";
 import { ConversationMessage } from "@/types/profile";
+import { ChatContainer, MessageList } from "@chatscope/chat-ui-kit-react";
+import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import ConversationMessageComponent from "../conversation/conversation-message";
+import "./conversation.css";
 
 export type ConversationProps = {
   serverConversation: ConversationMessage[];
 };
 
 export const Conversation = ({ serverConversation }: ConversationProps) => {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const {
     conversation,
     isPolling,
@@ -24,10 +29,17 @@ export const Conversation = ({ serverConversation }: ConversationProps) => {
     serverConversation?.[0]?.conversationId || ""
   );
 
+  // Auto-scroll to bottom when conversation updates
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [conversation]);
+
   return (
     <div className="max-w-4xl mx-auto">
       {/* Header */}
-      <div className="mb-6">
+      <div className="">
         <div className="flex items-center justify-between mb-4">
           <div>
             <Link
@@ -42,7 +54,6 @@ export const Conversation = ({ serverConversation }: ConversationProps) => {
           <div className="flex gap-2">
             <button
               onClick={() => setIsPolling(!isPolling)}
-              disabled={session?.callStatus != "connected"}
               className={`px-4 py-2 rounded-lg transition-colors text-sm font-medium ${
                 isPolling
                   ? "bg-green-600 text-white hover:bg-green-700"
@@ -59,7 +70,7 @@ export const Conversation = ({ serverConversation }: ConversationProps) => {
         </div>
 
         {/* Conversation Stats */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-gray-800  p-4 border border-gray-200 dark:border-gray-700">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
             <div>
               <p className="text-gray-600 dark:text-gray-400">
@@ -86,7 +97,7 @@ export const Conversation = ({ serverConversation }: ConversationProps) => {
                 {Array.from(languages).map((lang) => (
                   <span
                     key={lang}
-                    className="px-2 py-1 rounded text-sm bg-gray-700 font-medium">
+                    className="px-2 py-1 rounded text-sm bg-gray-200 font-medium">
                     {lang}
                   </span>
                 ))}
@@ -97,28 +108,25 @@ export const Conversation = ({ serverConversation }: ConversationProps) => {
       </div>
 
       {/* Messages */}
-      {conversation.length === 0 ? (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center border border-gray-200 dark:border-gray-700">
-          <p className="text-gray-600 dark:text-gray-300">
-            No messages in this conversation
-          </p>
-        </div>
-      ) : (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Messages
-          </h2>
-          <div className="space-y-2">
-            {conversation.map((message, index) => (
+      <div className="border border-gray-200 dark:border-gray-700 border-t-0">
+        <ChatContainer
+          style={{
+            height: "100%",
+            width: "100%",
+            border: "1px solid gray",
+          }}>
+          <MessageList style={{ height: "100%" }}>
+            {conversation.map((m, idx) => (
               <ConversationMessageComponent
-                key={`${message.timestamp}-${index}`}
-                message={message}
+                key={`${m.timestamp}-${idx}`}
+                message={m}
                 showTranslation={showTranslations}
               />
             ))}
-          </div>
-        </div>
-      )}
+            <div ref={messagesEndRef} />
+          </MessageList>
+        </ChatContainer>
+      </div>
     </div>
   );
 };

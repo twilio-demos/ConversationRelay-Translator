@@ -2,6 +2,14 @@
 
 import { signIn } from "next-auth/react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function SignIn() {
   const [isLoading, setIsLoading] = useState(false);
@@ -12,22 +20,23 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-        <div>
-          <h2 className="text-center text-3xl font-extrabold text-gray-900 dark:text-white">
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <Card className="max-w-md w-full">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-3xl text-center">
             Sign in to your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+          </CardTitle>
+          <CardDescription className="text-center">
             Translation Management System
-          </p>
-        </div>
-        <div>
-          <button
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button
             onClick={handleGoogleSignIn}
             disabled={isLoading}
-            className="w-full flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors disabled:opacity-50"
-          >
+            variant="outline"
+            className="w-full"
+            size="lg">
             <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
               <path
                 fill="currentColor"
@@ -47,9 +56,9 @@ export default function SignIn() {
               />
             </svg>
             {isLoading ? "Signing in..." : "Sign in with Google"}
-          </button>
-        </div>
-      </div>
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }

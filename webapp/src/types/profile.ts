@@ -57,7 +57,6 @@ export const LANGUAGES = [
   { code: "it-IT", friendly: "Italian - Italy", translateCode: "it" },
   { code: "pt-BR", friendly: "Portuguese - Brazil", translateCode: "pt" },
   { code: "ja-JP", friendly: "Japanese - Japan", translateCode: "ja" },
-  { code: "cmm-CN", friendly: "Chinese - Mandarin", translateCode: "cmm" },
 ];
 
 export const VOICES = {
@@ -77,13 +76,7 @@ export const VOICES = {
     "Adriano-Generative",
   ],
   pt: ["Camila-Generative", "Ricardo-Generative", "Thiago-Generative"],
-  jp: [
-    "Mizuki-Generative",
-    "Takumi-Generative",
-    "Kazuha-Generative",
-    "Tomoko-Generative",
-  ],
-  cmm: ["Zhiyu-Generative"],
+  ja: ["Takumi-Neural"],
 };
 
 export interface Session {

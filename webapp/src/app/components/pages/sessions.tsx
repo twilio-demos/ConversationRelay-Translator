@@ -4,6 +4,23 @@ import { useSessions } from "@/hooks/use-sessions";
 import { Session } from "@/types/profile";
 import Link from "next/link";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 export type ClientSessionsPageProps = {
   serverSessions: Session[];
@@ -33,32 +50,34 @@ export default function ClientSessionsPage({
   return (
     <div className="max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Call Sessions
-        </h1>
+        <h1 className="text-3xl font-bold">Call Sessions</h1>
         <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-600 dark:text-gray-400">
+          <Label htmlFor="sortBy" className="text-sm text-muted-foreground">
             Sort by:
-          </label>
-          <select
+          </Label>
+          <Select
             value={sortBy}
-            onChange={(e) =>
-              setSortBy(e.target.value as "recent" | "caller" | "callee")
-            }
-            className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-sm">
-            <option value="recent">Most Recent</option>
-            <option value="caller">Caller Name</option>
-            <option value="callee">Callee Number</option>
-          </select>
+            onValueChange={(value) =>
+              setSortBy(value as "recent" | "caller" | "callee")
+            }>
+            <SelectTrigger id="sortBy" className="w-[180px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="recent">Most Recent</SelectItem>
+              <SelectItem value="caller">Caller Name</SelectItem>
+              <SelectItem value="callee">Callee Number</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
       {sessions.length === 0 ? (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center border border-gray-200 dark:border-gray-700">
-          <p className="text-gray-600 dark:text-gray-300">
-            No call sessions found
-          </p>
-        </div>
+        <Card>
+          <CardContent className="p-12 text-center">
+            <p className="text-muted-foreground">No call sessions found</p>
+          </CardContent>
+        </Card>
       ) : (
         <div className="space-y-4">
           {sortedSessions.map((session) => (
@@ -74,51 +93,49 @@ function SessionCard({ session }: { session: Session }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <Card>
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full p-6 text-left hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+        className="w-full p-6 text-left hover:bg-accent transition-colors">
         <div className="flex justify-between items-start">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2 flex-wrap">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              <h3 className="text-lg font-semibold">
                 {session.name || "Unknown Caller"}
               </h3>
-              <span
-                className={`px-2 py-1 text-xs font-medium rounded-full ${
-                  session.callStatus === "connected"
-                    ? "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300"
-                    : "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300"
-                }`}>
+              <Badge
+                variant={
+                  session.callStatus === "connected" ? "default" : "secondary"
+                }>
                 {session.callStatus || "unknown"}
-              </span>
+              </Badge>
               {session.whichParty && (
-                <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
-                  {session.whichParty}
-                </span>
+                <Badge variant="outline">{session.whichParty}</Badge>
               )}
-              <Link
-                href={`/conversations/${
-                  session.parentConnectionId || session.connectionId
-                }`}
-                onClick={(e) => e.stopPropagation()}
-                className="px-3 py-1 text-xs font-medium rounded-full transition-colors cursor-pointer hover:underline">
-                View Conversation
-              </Link>
+              <Button
+                variant="link"
+                size="sm"
+                asChild
+                onClick={(e) => e.stopPropagation()}>
+                <Link
+                  href={`/conversations/${
+                    session.parentConnectionId || session.connectionId
+                  }`}>
+                  View Conversation
+                </Link>
+              </Button>
             </div>
 
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Connection ID
-                </p>
-                <p className="font-mono text-xs text-gray-900 dark:text-gray-100 truncate">
+                <p className="text-muted-foreground">Connection ID</p>
+                <p className="font-mono text-xs truncate">
                   {session.connectionId}
                 </p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400">Call SID</p>
-                <p className="font-mono text-xs text-gray-900 dark:text-gray-100 truncate">
+                <p className="text-muted-foreground">Call SID</p>
+                <p className="font-mono text-xs truncate">
                   {session.callSid || "N/A"}
                 </p>
               </div>
@@ -127,7 +144,7 @@ function SessionCard({ session }: { session: Session }) {
 
           <div className="ml-4 flex-shrink-0">
             <svg
-              className={`w-5 h-5 text-gray-500 transition-transform ${
+              className={`w-5 h-5 text-muted-foreground transition-transform ${
                 expanded ? "rotate-180" : ""
               }`}
               fill="none"
@@ -145,82 +162,56 @@ function SessionCard({ session }: { session: Session }) {
       </button>
 
       {expanded && (
-        <div className="px-6 pb-6 border-t border-gray-200 dark:border-gray-700 pt-4">
+        <CardContent className="border-t pt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Caller (Source) Info */}
             <div>
-              <h4 className="font-semibold text-gray-900 dark:text-white mb-3">
-                Caller Settings
-              </h4>
+              <h4 className="font-semibold mb-3">Caller Settings</h4>
               <dl className="space-y-2 text-sm">
                 <div>
-                  <dt className="text-gray-600 dark:text-gray-400">Language</dt>
-                  <dd className="text-gray-900 dark:text-gray-100">
-                    {session.sourceLanguageFriendly || "N/A"}
-                  </dd>
+                  <dt className="text-muted-foreground">Language</dt>
+                  <dd>{session.sourceLanguageFriendly || "N/A"}</dd>
                 </div>
                 <div>
-                  <dt className="text-gray-600 dark:text-gray-400">Voice</dt>
-                  <dd className="text-gray-900 dark:text-gray-100">
-                    {session.sourceVoice || "N/A"}
-                  </dd>
+                  <dt className="text-muted-foreground">Voice</dt>
+                  <dd>{session.sourceVoice || "N/A"}</dd>
                 </div>
                 <div>
-                  <dt className="text-gray-600 dark:text-gray-400">
-                    Transcription
-                  </dt>
-                  <dd className="text-gray-900 dark:text-gray-100">
-                    {session.sourceTranscriptionProvider || "N/A"}
-                  </dd>
+                  <dt className="text-muted-foreground">Transcription</dt>
+                  <dd>{session.sourceTranscriptionProvider || "N/A"}</dd>
                 </div>
                 <div>
-                  <dt className="text-gray-600 dark:text-gray-400">
-                    TTS Provider
-                  </dt>
-                  <dd className="text-gray-900 dark:text-gray-100">
-                    {session.sourceTtsProvider || "N/A"}
-                  </dd>
+                  <dt className="text-muted-foreground">TTS Provider</dt>
+                  <dd>{session.sourceTtsProvider || "N/A"}</dd>
                 </div>
               </dl>
             </div>
 
             {/* Callee Info */}
             <div>
-              <h4 className="font-semibold text-gray-900 dark:text-white mb-3">
-                Callee Settings
-              </h4>
+              <h4 className="font-semibold mb-3">Callee Settings</h4>
               <dl className="space-y-2 text-sm">
                 <div>
-                  <dt className="text-gray-600 dark:text-gray-400">Number</dt>
-                  <dd className="text-gray-900 dark:text-gray-100">
-                    {session.calleeNumber || "N/A"}
-                  </dd>
+                  <dt className="text-muted-foreground">Number</dt>
+                  <dd>{session.calleeNumber || "N/A"}</dd>
                 </div>
                 <div>
-                  <dt className="text-gray-600 dark:text-gray-400">Language</dt>
-                  <dd className="text-gray-900 dark:text-gray-100">
-                    {session.calleeLanguageFriendly || "N/A"}
-                  </dd>
+                  <dt className="text-muted-foreground">Language</dt>
+                  <dd>{session.calleeLanguageFriendly || "N/A"}</dd>
                 </div>
                 <div>
-                  <dt className="text-gray-600 dark:text-gray-400">Voice</dt>
-                  <dd className="text-gray-900 dark:text-gray-100">
-                    {session.calleeVoice || "N/A"}
-                  </dd>
+                  <dt className="text-muted-foreground">Voice</dt>
+                  <dd>{session.calleeVoice || "N/A"}</dd>
                 </div>
                 <div>
-                  <dt className="text-gray-600 dark:text-gray-400">
-                    Transcription
-                  </dt>
-                  <dd className="text-gray-900 dark:text-gray-100">
-                    {session.calleeTranscriptionProvider || "N/A"}
-                  </dd>
+                  <dt className="text-muted-foreground">Transcription</dt>
+                  <dd>{session.calleeTranscriptionProvider || "N/A"}</dd>
                 </div>
               </dl>
             </div>
           </div>
-        </div>
+        </CardContent>
       )}
-    </div>
+    </Card>
   );
 }

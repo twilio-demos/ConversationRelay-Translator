@@ -3,6 +3,7 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 export function Navigation() {
   const pathname = usePathname();
@@ -20,50 +21,45 @@ export function Navigation() {
   ];
 
   return (
-    <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+    <nav className="border-b bg-background">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link
-            href="/"
-            className="text-xl font-bold text-gray-900 dark:text-white">
+          <Link href="/" className="text-xl font-bold">
             CR Translator
           </Link>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
             {links.map((link) => {
               const isActive = pathname === link.href;
               return (
-                <Link
+                <Button
                   key={link.href}
-                  href={link.href}
-                  target={link.target}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActive
-                      ? "bg-gray-900 text-white dark:bg-gray-700"
-                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  }`}>
-                  {link.label}
-                </Link>
+                  variant={isActive ? "default" : "ghost"}
+                  size="sm"
+                  asChild>
+                  <Link href={link.href} target={link.target}>
+                    {link.label}
+                  </Link>
+                </Button>
               );
             })}
 
             {session ? (
-              <div className="flex items-center space-x-3">
-                <span className="text-sm text-gray-700 dark:text-gray-300">
+              <div className="flex items-center space-x-3 ml-4">
+                <span className="text-sm text-muted-foreground">
                   {session.user?.email}
                 </span>
-                <button
+                <Button
                   onClick={() => signOut()}
-                  className="px-3 py-2 rounded-md text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors">
+                  variant="destructive"
+                  size="sm">
                   Sign Out
-                </button>
+                </Button>
               </div>
             ) : (
-              <button
-                onClick={() => signIn("google")}
-                className="px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+              <Button onClick={() => signIn("google")} size="sm" className="ml-4">
                 Sign In
-              </button>
+              </Button>
             )}
           </div>
         </div>

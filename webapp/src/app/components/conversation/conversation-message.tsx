@@ -1,4 +1,6 @@
 import { ConversationMessage } from "@/types/profile";
+import { Message } from "@chatscope/chat-ui-kit-react";
+import "./conversation-message.css";
 
 export type ConversationMessageProps = {
   message: ConversationMessage;
@@ -12,38 +14,45 @@ export default function ConversationMessageComponent({
   const isCaller = message.whichParty === "caller";
 
   return (
-    <div className={`flex ${isCaller ? "justify-start" : "justify-end"} mb-4`}>
-      <div
-        className={`max-w-[70%] rounded-lg px-4 py-3 ${
-          isCaller
-            ? "bg-blue-100 dark:bg-blue-900/30 text-blue-900 dark:text-blue-100"
-            : "bg-green-100 dark:bg-green-900/30 text-green-900 dark:text-green-100"
-        }`}>
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-xs font-semibold uppercase opacity-70">
-            {message.whichParty}
-          </span>
-          <span className="text-xs opacity-50">
-            {new Date(message.timestamp).toLocaleTimeString()}
-          </span>
+    <Message
+      model={{
+        direction: isCaller ? "incoming" : "outgoing",
+        position: "single",
+      }}>
+      <Message.CustomContent>
+        <div style={{ marginBottom: "0.5rem" }}>
+          <div
+            style={{
+              fontSize: "0.75rem",
+              opacity: 0.7,
+              marginBottom: "0.25rem",
+            }}>
+            Original ({message.originalLanguageCode})
+          </div>
+          <div style={{ fontSize: "1rem" }}>{message.original}</div>
         </div>
-
-        <div className="mb-2">
-          <p className="text-sm font-medium mb-1">
-            Original ({message.originalLanguageCode}):
-          </p>
-          <p className="text-base">{message.original}</p>
-        </div>
-
-        {showTranslation && (
-          <div className="pt-2 border-t border-current opacity-80">
-            <p className="text-sm font-medium mb-1">
-              Translated ({message.translatedLanguageCode}):
-            </p>
-            <p className="text-base italic">{message.translated}</p>
+        {showTranslation && message.translated && (
+          <div
+            style={{
+              paddingTop: "0.5rem",
+              borderTop: "1px solid currentColor",
+              opacity: 0.85,
+            }}>
+            <div
+              style={{
+                fontSize: "0.75rem",
+                opacity: 0.7,
+                marginBottom: "0.25rem",
+              }}>
+              Translated ({message.translatedLanguageCode})
+            </div>
+            <div style={{ fontStyle: "italic" }}>{message.translated}</div>
           </div>
         )}
-      </div>
-    </div>
+      </Message.CustomContent>
+      <Message.Footer>
+        {new Date(message.timestamp).toLocaleTimeString()}
+      </Message.Footer>
+    </Message>
   );
 }
