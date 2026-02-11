@@ -104,10 +104,17 @@ export default function ClientProfilePage({ profile }: ClientProfilePageProps) {
       {/* Caller Settings */}
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>Caller Settings</CardTitle>
+          <CardTitle>
+            <div className="flex flex-col gap-2">
+              <span>Caller Settings</span>
+              <span className="text-sm font-normal text-muted-foreground">
+                Your caller settings
+              </span>
+            </div>
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t pt-6">
             <div>
               <p className="text-sm text-muted-foreground">Language</p>
               <p className="text-base font-medium mt-1">
@@ -141,10 +148,17 @@ export default function ClientProfilePage({ profile }: ClientProfilePageProps) {
       {/* Callee Settings */}
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>Callee Settings</CardTitle>
+          <CardTitle>
+            <div className="flex flex-col gap-2">
+              <span>Callee Settings</span>
+              <span className="text-sm font-normal text-muted-foreground">
+                Settings for who you are calling
+              </span>
+            </div>
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="mb-4">
+          <div className="mb-4 border-t pt-6">
             <p className="text-sm text-muted-foreground">
               Custom Callee Details
             </p>
