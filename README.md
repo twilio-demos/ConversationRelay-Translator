@@ -39,6 +39,15 @@ Using Flex will bypass the **Callee** number and instead send it to Flex using t
 
 This will walk you through a short guide on how to deploy the CloudFormation stack needed in this application
 
+### Prerequisites
+
+- A Twilio phone number
+- AWS SAM CLI
+- An AWS account with appropriate permissions to deploy Lambdas, DynamoDB, Serverless HTTP APIs
+- Twilio CLI
+- Flex workflow and Queue (optional)
+- Another Twilio phone number (optional, if using Flex)
+
 ### Sam Configuration
 
 Ensure that you have the [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html) installed before doing this
