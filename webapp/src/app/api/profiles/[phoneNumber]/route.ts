@@ -58,6 +58,8 @@ export async function PUT(
       anonymousId: "",
     });
 
+    await analytics.flush();
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error updating profile:", error);

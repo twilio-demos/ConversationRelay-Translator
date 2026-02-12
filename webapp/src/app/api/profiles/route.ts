@@ -43,6 +43,8 @@ export async function POST(request: NextRequest) {
       anonymousId: "",
     });
 
+    await analytics.flush();
+
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (error) {
     console.error("Error creating profile:", error);
