@@ -93,33 +93,36 @@ export function ProfileFormFormik({
     { setSubmitting, setFieldError }: FormikHelpers<UserProfile>
   ) => {
     try {
-      // Check if phone number is already used (only for new profiles)
-      if (!profile) {
-        const url = `/api/profiles/check?phoneNumber=${encodeURIComponent(
-          values.phoneNumber
-        )}&handle=${encodeURIComponent(values.flexWorkerHandle)}`;
+      const url = `/api/profiles/check?phoneNumber=${encodeURIComponent(
+        values.phoneNumber
+      )}&handle=${encodeURIComponent(values.flexWorkerHandle)}`;
 
-        const checkResponse = await fetch(url);
-        const { phoneNumberUsed, handleUsed } = await checkResponse.json();
+      const checkResponse = await fetch(url);
+      const { phoneNumberUsed, handleUsed } = await checkResponse.json();
 
-        if (phoneNumberUsed) {
-          setFieldError(
-            "phoneNumber",
-            "This phone number is already in use for another profile"
-          );
-        }
+      const samePhoneNumber = profile?.phoneNumber === values.phoneNumber;
+      const sameHandle = profile?.flexWorkerHandle === values.flexWorkerHandle;
 
-        if (handleUsed) {
-          setFieldError(
-            "flexWorkerHandle",
-            "This Flex Worker is already in use for another profile"
-          );
-        }
+      if (!samePhoneNumber && phoneNumberUsed) {
+        setFieldError(
+          "phoneNumber",
+          "This phone number is already in use for another profile"
+        );
+      }
 
-        if (phoneNumberUsed || handleUsed) {
-          setSubmitting(false);
-          return;
-        }
+      if (!sameHandle && handleUsed) {
+        setFieldError(
+          "flexWorkerHandle",
+          "This Flex Worker is already in use for another profile"
+        );
+      }
+
+      if (
+        (!samePhoneNumber && phoneNumberUsed) ||
+        (!sameHandle && handleUsed)
+      ) {
+        setSubmitting(false);
+        return;
       }
 
       await onSubmit(values);
