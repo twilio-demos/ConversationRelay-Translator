@@ -251,7 +251,7 @@ export function ProfileForm({
         <div className="px-6 pb-6">
           <div className="mb-4 border-t pt-6">
             <h3 className="text-lg font-semibold mb-4">Flex Settings</h3>
-            <div className="rounded-lg space-y-4">
+            <div className="flex flex-col rounded-lg space-y-4">
               <FormikCheckbox
                 name="useFlex"
                 label="Use Twilio Flex"
@@ -262,7 +262,7 @@ export function ProfileForm({
                     : undefined
                 }
               />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 <FormikInput
                   name="flexNumber"
                   label="Flex Number"
@@ -276,6 +276,25 @@ export function ProfileForm({
                   label="Flex Worker Handle"
                   placeholder="jpyles"
                   disabled={values.calleeDetails}
+                />
+              </div>
+              <div className="grid grid-cols-1 gap-4">
+                <FormikCheckbox
+                  name="useExternalFlex"
+                  label="Use External Flex"
+                  disabled={values.calleeDetails || !values.useFlex}
+                  description={
+                    values.calleeDetails
+                      ? "External flex is not available with Callee Enabled"
+                      : undefined
+                  }
+                />
+                <FormikInput
+                  name="externalFlexNumber"
+                  label="External Flex Number"
+                  type="tel"
+                  placeholder="+1234567890"
+                  disabled={values.calleeDetails || !values.useExternalFlex}
                 />
               </div>
             </div>

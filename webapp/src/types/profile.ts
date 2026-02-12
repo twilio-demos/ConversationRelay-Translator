@@ -25,6 +25,8 @@ export interface UserProfile {
   useFlex: boolean;
   flexNumber: string;
   flexWorkerHandle: string;
+  useExternalFlex: boolean;
+  externalFlexNumber: string;
 }
 
 export interface DynamoDBProfile {

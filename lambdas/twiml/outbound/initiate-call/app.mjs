@@ -56,6 +56,8 @@ export const lambdaHandler = async (event, context) => {
         sourceVoice: snsPayload.calleeVoice, // ("Lupe-Generative") Voice for TTS (depends on ttsProvider)
         useFlex: snsPayload.useFlex,
         flexNumber: snsPayload.flexNumber,
+        useExternalFlex: snsPayload.useExternalFlex,
+        externalFlexNumber: snsPayload.externalFlexNumber,
       };
 
       if (snsPayload?.calleeNumber !== undefined) {
@@ -91,8 +93,15 @@ export const lambdaHandler = async (event, context) => {
       }
     }
 
-    // Get the flex number from the agent profile, otherwise use default
-    const flexNumber = agentContext?.flexNumber
+    // Check if using an external flex number instead of ours
+    const useExternalFlex =
+      agentContext?.useExternalFlex === true ||
+      agentContext?.useExternalFlex === "true";
+
+    // Get the flex number from the agent profile (use external if enabled), otherwise use default
+    const flexNumber = useExternalFlex
+      ? agentContext?.externalFlexNumber
+      : agentContext?.flexNumber
       ? agentContext?.flexNumber
       : process.env.FLEX_NUMBER;
 

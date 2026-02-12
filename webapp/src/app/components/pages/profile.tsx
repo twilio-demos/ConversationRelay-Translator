@@ -232,6 +232,24 @@ export default function ClientProfilePage({ profile }: ClientProfilePageProps) {
                   </p>
                 </div>
               </div>
+              <div>
+                <p className="text-sm text-muted-foreground">
+                  External Flex Enabled
+                </p>
+                <Badge
+                  variant={profile.useExternalFlex ? "default" : "secondary"}
+                  className="mt-1">
+                  {profile.useExternalFlex ? "Enabled" : "Disabled"}
+                </Badge>
+              </div>
+              <div className="md:col-span-2">
+                <p className="text-sm text-muted-foreground">
+                  External Flex Number
+                </p>
+                <p className="text-base font-medium mt-1">
+                  {profile.externalFlexNumber || "Not set"}
+                </p>
+              </div>
             </div>
           </div>
         </div>

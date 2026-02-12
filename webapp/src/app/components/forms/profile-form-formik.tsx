@@ -60,6 +60,15 @@ const profileValidationSchema = Yup.object().shape({
       schema.required("Flex worker handle is required when Flex is enabled"),
     otherwise: (schema) => schema.optional(),
   }),
+  useExternalFlex: Yup.bool().optional(),
+  externalFlexNumber: Yup.string().when("useExternalFlex", {
+    is: true,
+    then: (schema) =>
+      schema.required(
+        "External flex number is required when using external flex"
+      ),
+    otherwise: (schema) => schema.optional(),
+  }),
 });
 
 const initialValues: UserProfile = {
@@ -82,6 +91,8 @@ const initialValues: UserProfile = {
   useFlex: false,
   flexNumber: process.env.NEXT_PUBLIC_FLEX_NUMBER ?? "",
   flexWorkerHandle: "",
+  useExternalFlex: false,
+  externalFlexNumber: "",
 };
 
 export function ProfileFormFormik({
