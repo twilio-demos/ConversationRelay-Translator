@@ -17,6 +17,7 @@ export function Navigation() {
       href: "https://github.com/twilio-demos/ConversationRelay-Translator/blob/main/README.md",
       label: "Guide",
       target: "_blank",
+      hide: process.env.NEXT_PUBLIC_EXTERNAL === "true",
     },
   ];
 
@@ -31,6 +32,12 @@ export function Navigation() {
           <div className="flex items-center space-x-2">
             {links.map((link) => {
               const isActive = pathname === link.href;
+              const hideButton = link.hide;
+
+              if (hideButton) {
+                return;
+              }
+
               return (
                 <Button
                   key={link.href}
