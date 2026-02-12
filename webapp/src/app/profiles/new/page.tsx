@@ -14,7 +14,10 @@ export default function NewProfilePage() {
       const response = await fetch("/api/profiles", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...profile, creator: session?.user?.email }),
+        body: JSON.stringify({
+          ...profile,
+          creator: process.env.NEXT_PUBLIC_EMAIL || session?.user?.email,
+        }),
       });
 
       if (!response.ok) {

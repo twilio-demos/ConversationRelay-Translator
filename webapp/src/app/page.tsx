@@ -10,14 +10,15 @@ import {
 
 import { HeroBanner } from "@/components/HeroBanner";
 import { listProfiles, listSessions } from "@/lib/dynamodb";
-import Link from "next/link";
 import { getServerSession } from "next-auth/next";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const session = await getServerSession();
-  const owner = session?.user?.email || undefined;
+  const owner =
+    process.env.NEXT_PUBLIC_EMAIL || session?.user?.email || undefined;
   const profiles = await listProfiles(owner);
   const sessions = await listSessions();
 

@@ -44,8 +44,8 @@ export function Navigation() {
               );
             })}
 
-            {process.env.NEXT_PUBLIC_LOCAL !== "true" && (
-              session ? (
+            {process.env.NEXT_PUBLIC_EXTERNAL !== "true" &&
+              (session ? (
                 <div className="flex items-center space-x-3 ml-4">
                   <span className="text-sm text-muted-foreground">
                     {session.user?.email}
@@ -64,8 +64,7 @@ export function Navigation() {
                   className="ml-4">
                   Sign In
                 </Button>
-              )
-            )}
+              ))}
           </div>
         </div>
       </div>
