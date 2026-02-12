@@ -4,15 +4,6 @@ import { useSession } from "next-auth/react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
-declare global {
-  interface Window {
-    analytics?: {
-      page: (name?: string, properties?: Record<string, any>) => void;
-      identify: (userId: string, traits?: Record<string, any>) => void;
-    };
-  }
-}
-
 export function SegmentPageTracker() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
