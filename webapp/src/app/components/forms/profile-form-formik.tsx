@@ -21,15 +21,33 @@ const profileValidationSchema = Yup.object().shape({
   sourceTranscriptionProvider: Yup.string().required(),
   sourceTtsProvider: Yup.string().required(),
   sourceVoice: Yup.string().required("Source voice is required"),
-  calleeDetails: Yup.boolean(),
-  calleeNumber: Yup.string(),
+  calleeDetails: Yup.boolean().test(
+    "at-least-one",
+    "Either Callee Details or Flex must be enabled",
+    function (value) {
+      const { useFlex } = this.parent;
+      return value === true || useFlex === true;
+    }
+  ),
+  calleeNumber: Yup.string().when("calleeDetails", {
+    is: true,
+    then: (schema) => schema.required("Callee Number is required"),
+    otherwise: (schema) => schema.optional(),
+  }),
   calleeLanguage: Yup.string().required("Callee language is required"),
   calleeLanguageCode: Yup.string().required(),
   calleeLanguageFriendly: Yup.string().required(),
   calleeTranscriptionProvider: Yup.string().required(),
   calleeTtsProvider: Yup.string().required(),
   calleeVoice: Yup.string().required("Callee voice is required"),
-  useFlex: Yup.boolean(),
+  useFlex: Yup.boolean().test(
+    "at-least-one",
+    "Either Callee Details or Flex must be enabled",
+    function (value) {
+      const { calleeDetails } = this.parent;
+      return value === true || calleeDetails === true;
+    }
+  ),
   flexNumber: Yup.string().when("useFlex", {
     is: true,
     then: (schema) =>
@@ -56,7 +74,7 @@ const initialValues: UserProfile = {
   calleeDetails: true,
   calleeNumber: "",
   calleeLanguage: "es-MX",
-  calleeLanguageCode: "es-MX",
+  calleeLanguageCode: "es",
   calleeLanguageFriendly: "Spanish - Mexico",
   calleeTranscriptionProvider: "Deepgram",
   calleeTtsProvider: "Amazon",
@@ -72,12 +90,42 @@ export function ProfileFormFormik({
 }: ProfileFormFormikProps) {
   const handleSubmit = async (
     values: UserProfile,
-    { setSubmitting }: FormikHelpers<UserProfile>
+    { setSubmitting, setFieldError }: FormikHelpers<UserProfile>
   ) => {
     try {
+      // Check if phone number is already used (only for new profiles)
+      if (!profile) {
+        const url = `/api/profiles/check?phoneNumber=${encodeURIComponent(
+          values.phoneNumber
+        )}&handle=${encodeURIComponent(values.flexWorkerHandle)}`;
+
+        const checkResponse = await fetch(url);
+        const { phoneNumberUsed, handleUsed } = await checkResponse.json();
+
+        if (phoneNumberUsed) {
+          setFieldError(
+            "phoneNumber",
+            "This phone number is already in use for another profile"
+          );
+        }
+
+        if (handleUsed) {
+          setFieldError(
+            "flexWorkerHandle",
+            "This Flex Worker is already in use for another profile"
+          );
+        }
+
+        if (phoneNumberUsed || handleUsed) {
+          setSubmitting(false);
+          return;
+        }
+      }
+
       await onSubmit(values);
-    } finally {
+    } catch (error) {
       setSubmitting(false);
+      throw error;
     }
   };
 

@@ -23,7 +23,6 @@ const client = new DynamoDBClient({
 const docClient = DynamoDBDocumentClient.from(client);
 const TABLE_NAME = process.env.DYNAMODB_TABLE_NAME || "";
 
-// Convert UserProfile to DynamoDB format
 export function profileToDynamoDB(profile: UserProfile): any {
   return {
     pk: profile.phoneNumber,
@@ -31,6 +30,7 @@ export function profileToDynamoDB(profile: UserProfile): any {
     pk1: "profile",
     sk1: profile.phoneNumber,
     name: profile.name,
+    creator: profile.creator,
     calleeDetails: profile.calleeDetails,
     calleeLanguage: profile.calleeLanguage,
     calleeLanguageCode: profile.calleeLanguageCode,
@@ -51,11 +51,11 @@ export function profileToDynamoDB(profile: UserProfile): any {
   };
 }
 
-// Convert DynamoDB format to UserProfile
 export function dynamoDBToProfile(item: any): UserProfile {
   return {
     phoneNumber: item.pk,
     name: item.name,
+    creator: item.creator,
     calleeDetails: item.calleeDetails,
     calleeLanguage: item.calleeLanguage,
     calleeLanguageCode: item.calleeLanguageCode,
@@ -149,15 +149,16 @@ export async function getProfile(
   return response.Item ? dynamoDBToProfile(response.Item) : null;
 }
 
-// List all profiles
-export async function listProfiles(): Promise<UserProfile[]> {
+export async function listProfiles(creator?: string): Promise<UserProfile[]> {
   const command = new QueryCommand({
     TableName: TABLE_NAME,
     IndexName: "index-1-full",
     KeyConditionExpression: "pk1 = :pk1",
     ExpressionAttributeValues: {
       ":pk1": "profile",
+      ...(creator ? { ":creator": creator } : {}),
     },
+    ...(creator ? { FilterExpression: "creator = :creator" } : {}),
   });
 
   const response = await docClient.send(command);

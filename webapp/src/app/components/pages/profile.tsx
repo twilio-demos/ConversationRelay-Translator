@@ -159,9 +159,7 @@ export default function ClientProfilePage({ profile }: ClientProfilePageProps) {
         </CardHeader>
         <CardContent>
           <div className="mb-4 border-t pt-6">
-            <p className="text-sm text-muted-foreground">
-              Custom Callee Details
-            </p>
+            <p className="text-sm text-muted-foreground">Use Callee Number</p>
             <Badge
               variant={profile.calleeDetails ? "default" : "secondary"}
               className="mt-1">

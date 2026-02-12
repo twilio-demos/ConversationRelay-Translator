@@ -11,11 +11,14 @@ import {
 import { HeroBanner } from "@/components/HeroBanner";
 import { listProfiles, listSessions } from "@/lib/dynamodb";
 import Link from "next/link";
+import { getServerSession } from "next-auth/next";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const profiles = await listProfiles();
+  const session = await getServerSession();
+  const owner = session?.user?.email || undefined;
+  const profiles = await listProfiles(owner);
   const sessions = await listSessions();
 
   const previewProfiles = profiles.slice(0, 3);

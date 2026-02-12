@@ -1,18 +1,20 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { ProfileForm } from "@/components/ProfileForm";
 import { UserProfile } from "@/types/profile";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function NewProfilePage() {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const handleSubmit = async (profile: UserProfile) => {
     try {
       const response = await fetch("/api/profiles", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(profile),
+        body: JSON.stringify({ ...profile, creator: session?.user?.email }),
       });
 
       if (!response.ok) {

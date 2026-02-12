@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -12,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { LANGUAGES, UserProfile, VOICES } from "@/types/profile";
+import { FormikCheckbox } from "../formik/formik-checkbox";
 import { FormikInput } from "../formik/formik-input";
 
 interface ProfileFormProps {
@@ -31,7 +31,6 @@ export function ProfileForm({
   onSubmit,
   onCancel,
 }: ProfileFormProps) {
-  console.log({ values });
   return (
     <form onSubmit={onSubmit} className="space-y-8" noValidate>
       {/* Basic Info */}
@@ -154,19 +153,17 @@ export function ProfileForm({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="mb-4 flex items-center space-x-2 border-t pt-6">
-            <Checkbox
-              id="calleeDetails"
-              checked={values.calleeDetails}
-              onCheckedChange={(checked) =>
-                onFieldChange("calleeDetails", checked)
+          <div className="mb-4 border-t pt-6">
+            <FormikCheckbox
+              name="calleeDetails"
+              label="Use Callee Number"
+              disabled={values.useFlex}
+              description={
+                values.useFlex
+                  ? "Can't enable Callee Number when Flex is enabled"
+                  : undefined
               }
             />
-            <Label
-              htmlFor="calleeDetails"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              Use custom callee details
-            </Label>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormikInput
@@ -175,6 +172,7 @@ export function ProfileForm({
               type="tel"
               placeholder="+1234567890"
               className="md:col-span-2"
+              disabled={values.useFlex}
             />
             <div className="space-y-2">
               <Label htmlFor="calleeLanguage">Language</Label>
@@ -254,20 +252,16 @@ export function ProfileForm({
           <div className="mb-4 border-t pt-6">
             <h3 className="text-lg font-semibold mb-4">Flex Settings</h3>
             <div className="rounded-lg space-y-4">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="useFlex"
-                  checked={values.useFlex}
-                  onCheckedChange={(checked) =>
-                    onFieldChange("useFlex", checked)
-                  }
-                />
-                <Label
-                  htmlFor="useFlex"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                  Use Twilio Flex
-                </Label>
-              </div>
+              <FormikCheckbox
+                name="useFlex"
+                label="Use Twilio Flex"
+                disabled={values.calleeDetails}
+                description={
+                  values.calleeDetails
+                    ? "Flex is not available with Callee Enabled"
+                    : undefined
+                }
+              />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormikInput
                   name="flexNumber"
@@ -281,6 +275,7 @@ export function ProfileForm({
                   name="flexWorkerHandle"
                   label="Flex Worker Handle"
                   placeholder="jpyles"
+                  disabled={values.calleeDetails}
                 />
               </div>
             </div>

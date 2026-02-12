@@ -1,6 +1,7 @@
 export interface UserProfile {
   phoneNumber: string;
   name: string;
+  creator?: string;
 
   // Source (Caller) Settings
   sourceLanguage: string;
