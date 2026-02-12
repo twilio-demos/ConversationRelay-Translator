@@ -32,13 +32,15 @@ const profileValidationSchema = Yup.object().shape({
   useFlex: Yup.boolean(),
   flexNumber: Yup.string().when("useFlex", {
     is: true,
-    then: (schema) => schema.required("Flex number is required when Flex is enabled"),
+    then: (schema) =>
+      schema.required("Flex number is required when Flex is enabled"),
     otherwise: (schema) => schema.optional(),
   }),
   flexWorkerHandle: Yup.string().when("useFlex", {
     is: true,
-    then: (schema) => schema.required("Flex worker handle is required when Flex is enabled"),
-    otherwise: (schema) => schema.optional()
+    then: (schema) =>
+      schema.required("Flex worker handle is required when Flex is enabled"),
+    otherwise: (schema) => schema.optional(),
   }),
 });
 
@@ -60,7 +62,7 @@ const initialValues: UserProfile = {
   calleeTtsProvider: "Amazon",
   calleeVoice: "Lupe-Generative",
   useFlex: false,
-  flexNumber: "",
+  flexNumber: process.env.NEXT_PUBLIC_FLEX_NUMBER ?? "",
   flexWorkerHandle: "",
 };
 
@@ -81,7 +83,11 @@ export function ProfileFormFormik({
 
   return (
     <Formik
-      initialValues={profile || initialValues}
+      initialValues={{
+        ...initialValues,
+        ...profile,
+        flexNumber: profile?.flexNumber || initialValues.flexNumber,
+      }}
       validationSchema={profileValidationSchema}
       onSubmit={handleSubmit}
       enableReinitialize>

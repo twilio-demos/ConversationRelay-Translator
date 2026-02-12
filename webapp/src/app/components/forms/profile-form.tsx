@@ -31,6 +31,7 @@ export function ProfileForm({
   onSubmit,
   onCancel,
 }: ProfileFormProps) {
+  console.log({ values });
   return (
     <form onSubmit={onSubmit} className="space-y-8" noValidate>
       {/* Basic Info */}
@@ -274,6 +275,7 @@ export function ProfileForm({
                   type="tel"
                   placeholder="+1234567890"
                   className="md:col-span-2"
+                  disabled
                 />
                 <FormikInput
                   name="flexWorkerHandle"
