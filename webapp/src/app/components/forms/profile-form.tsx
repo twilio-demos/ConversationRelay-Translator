@@ -58,6 +58,7 @@ export function ProfileForm({
   const filteredLanguagesForCallee = LANGUAGES.filter(
     (lang) => values.calleeTtsProvider !== "Google" || lang.code !== "es-MX"
   );
+
   return (
     <form onSubmit={onSubmit} className="space-y-8" noValidate>
       <Card>
@@ -171,6 +172,17 @@ export function ProfileForm({
               </Select>
             </div>
           </div>
+          {values.sourceTtsProvider === "ElevenLabs" && (
+            <div className="mt-6 pt-6 border-t">
+              <CardTitle className="text-md">ElevenLabs Settings</CardTitle>
+              <FormikInput
+                label="Voice Hash"
+                name="customSourceHash"
+                description="Use this to enter any ElevenLabs hash for the selected language"
+                placeholder="Enter custom voice hash or select from dropdown above"
+              />
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -287,6 +299,17 @@ export function ProfileForm({
               </Select>
             </div>
           </div>
+          {values.calleeTtsProvider === "ElevenLabs" && (
+            <div className="mt-6 pt-6 border-t px-6">
+              <CardTitle className="text-md">ElevenLabs Settings</CardTitle>
+              <FormikInput
+                label="Voice Hash"
+                name="customCalleeHash"
+                description="Use this to enter any ElevenLabs hash for the selected language"
+                placeholder="Enter custom voice hash or select from dropdown above"
+              />
+            </div>
+          )}
         </CardContent>
 
         <div className="px-6 pb-6">

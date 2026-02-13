@@ -26,7 +26,11 @@ const profileValidationSchema = Yup.object().shape({
   sourceLanguageFriendly: Yup.string().required(),
   sourceTranscriptionProvider: Yup.string().required(),
   sourceTtsProvider: Yup.string().required(),
-  sourceVoice: Yup.string().required("Source voice is required"),
+  sourceVoice: Yup.string().when("customSourceHash", {
+    is: (value: string) => !!value && value.length > 0,
+    then: (schema) => schema.optional(),
+    otherwise: (schema) => schema.required("Source voice is required"),
+  }),
   calleeDetails: Yup.boolean().test(
     "at-least-one",
     "Either Callee Details or Flex must be enabled",
@@ -45,7 +49,11 @@ const profileValidationSchema = Yup.object().shape({
   calleeLanguageFriendly: Yup.string().required(),
   calleeTranscriptionProvider: Yup.string().required(),
   calleeTtsProvider: Yup.string().required(),
-  calleeVoice: Yup.string().required("Callee voice is required"),
+  calleeVoice: Yup.string().when("customCalleeHash", {
+    is: (value: string) => !!value && value.length > 0,
+    then: (schema) => schema.optional(),
+    otherwise: (schema) => schema.required("Callee voice is required"),
+  }),
   useFlex: Yup.boolean().test(
     "at-least-one",
     "Either Callee Details or Flex must be enabled",
@@ -75,6 +83,8 @@ const profileValidationSchema = Yup.object().shape({
       ),
     otherwise: (schema) => schema.optional(),
   }),
+  customSourceHash: Yup.string(),
+  customCalleeHash: Yup.string(),
 });
 
 const initialValues: UserProfile = {
@@ -99,6 +109,8 @@ const initialValues: UserProfile = {
   flexWorkerHandle: "",
   useExternalFlex: false,
   externalFlexNumber: "",
+  customSourceHash: "",
+  customCalleeHash: "",
 };
 
 export function ProfileFormFormik({
@@ -142,7 +154,13 @@ export function ProfileFormFormik({
         return;
       }
 
-      await onSubmit(values);
+      const submissionValues = {
+        ...values,
+        sourceVoice: values.customSourceHash || values.sourceVoice,
+        calleeVoice: values.customCalleeHash || values.calleeVoice,
+      };
+
+      await onSubmit(submissionValues);
     } catch (error) {
       setSubmitting(false);
       throw error;
@@ -172,7 +190,6 @@ export function ProfileFormFormik({
           const language = LANGUAGES.find((l) => l.code === languageCode);
           if (!language) return;
 
-          // Get the first available voice for the new language
           const voices =
             provider === "ElevenLabs"
               ? ELEVEN_LABS_VOICES
@@ -185,7 +202,6 @@ export function ProfileFormFormik({
 
           const defaultVoice = availableVoices?.[0] || "";
 
-          // Update all fields
           if (type === "source") {
             setFieldValue("sourceLanguage", language.code);
             setFieldValue("sourceLanguageCode", language.translateCode);

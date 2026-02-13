@@ -23,21 +23,26 @@ export default function ClientProfilePage({ profile }: ClientProfilePageProps) {
   const router = useRouter();
 
   const handleUpdate = async (updatedProfile: UserProfile) => {
-    const response = await fetch(
-      `/api/profiles/${encodeURIComponent(profile.phoneNumber)}`,
-      {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedProfile),
+    try {
+      const response = await fetch(
+        `/api/profiles/${encodeURIComponent(profile.phoneNumber)}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedProfile),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update profile");
       }
-    );
 
-    if (!response.ok) {
-      throw new Error("Failed to update profile");
+      setIsEditing(false);
+      router.refresh();
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Failed to update profile. Please try again.");
     }
-
-    setIsEditing(false);
-    router.refresh();
   };
 
   const handleDelete = async () => {
@@ -142,9 +147,23 @@ export default function ClientProfilePage({ profile }: ClientProfilePageProps) {
             <div>
               <p className="text-sm text-muted-foreground">Voice</p>
               <p className="text-base font-medium mt-1">
-                {getVoice(profile.sourceTtsProvider, profile.sourceVoice)}
+                {profile.sourceTtsProvider === "ElevenLabs" &&
+                profile.customSourceHash
+                  ? "Using Custom Hash"
+                  : getVoice(profile.sourceTtsProvider, profile.sourceVoice)}
               </p>
             </div>
+            {profile.sourceTtsProvider === "ElevenLabs" &&
+              profile.customSourceHash && (
+                <div>
+                  <p className="text-sm text-muted-foreground">
+                    Custom Voice Hash
+                  </p>
+                  <p className="text-base font-medium mt-1 font-mono break-all">
+                    {profile.customSourceHash}
+                  </p>
+                </div>
+              )}
             <div>
               <p className="text-sm text-muted-foreground">
                 Transcription Provider
@@ -202,9 +221,23 @@ export default function ClientProfilePage({ profile }: ClientProfilePageProps) {
             <div>
               <p className="text-sm text-muted-foreground">Voice</p>
               <p className="text-base font-medium mt-1">
-                {getVoice(profile.calleeTtsProvider, profile.calleeVoice)}
+                {profile.calleeTtsProvider === "ElevenLabs" &&
+                profile.customCalleeHash
+                  ? "Using Custom Hash"
+                  : getVoice(profile.calleeTtsProvider, profile.calleeVoice)}
               </p>
             </div>
+            {profile.calleeTtsProvider === "ElevenLabs" &&
+              profile.customCalleeHash && (
+                <div>
+                  <p className="text-sm text-muted-foreground">
+                    Custom Voice Hash
+                  </p>
+                  <p className="text-base font-medium mt-1 font-mono break-all">
+                    {profile.customCalleeHash}
+                  </p>
+                </div>
+              )}
             <div>
               <p className="text-sm text-muted-foreground">
                 Transcription Provider

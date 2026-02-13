@@ -10,6 +10,7 @@ export interface UserProfile {
   sourceTranscriptionProvider: "Deepgram" | "Google";
   sourceTtsProvider: "Amazon" | "Google" | "ElevenLabs";
   sourceVoice: string;
+  customSourceHash?: string;
 
   // Callee Settings
   calleeDetails: boolean;
@@ -20,6 +21,7 @@ export interface UserProfile {
   calleeTranscriptionProvider: "Deepgram" | "Google";
   calleeTtsProvider: "Amazon" | "Google" | "ElevenLabs";
   calleeVoice: string;
+  customCalleeHash?: string;
 
   // Flex Settings
   useFlex: boolean;
@@ -94,15 +96,11 @@ export const GOOGLE_VOICES = {
   ko: ["ko-KR-Chirp3-HD-Aoede", "ko-KR-Chirp3-HD-Charon"], // Korean
 };
 
-// Helper function to get friendly name for Google voices
-// First voice is always Female, second is always Male
 export function getGoogleVoiceFriendlyName(voice: string): string {
   const voiceIndex = Object.values(GOOGLE_VOICES).flat().indexOf(voice);
 
   if (voiceIndex === -1) return voice;
 
-  // Check if it's at an even index (0, 2, 4...) = Female
-  // Or odd index (1, 3, 5...) = Male
   for (const voices of Object.values(GOOGLE_VOICES)) {
     const index = voices.indexOf(voice);
     if (index !== -1) {

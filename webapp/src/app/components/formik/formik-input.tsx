@@ -12,6 +12,7 @@ interface FormikInputProps {
   placeholder?: string;
   value?: string | number;
   error?: string;
+  description?: string;
   touched?: boolean;
   required?: boolean;
   disabled?: boolean;
@@ -26,6 +27,7 @@ export const FormikInput = ({
   placeholder,
   value: valueProp,
   error: errorProp,
+  description,
   touched: touchedProp,
   required = false,
   disabled = false,
@@ -50,6 +52,11 @@ export const FormikInput = ({
         {label}
         {required && <span className="text-destructive ml-1">*</span>}
       </Label>
+      {description && (
+        <p className="text-xs text-muted-foreground">
+          <i>{description}</i>
+        </p>
+      )}
       <Input
         id={name}
         name={name}

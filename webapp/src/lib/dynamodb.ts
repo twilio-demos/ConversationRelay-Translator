@@ -50,6 +50,8 @@ export function profileToDynamoDB(profile: UserProfile): any {
     flexWorkerHandle: profile.flexWorkerHandle,
     useExternalFlex: profile.useExternalFlex,
     externalFlexNumber: profile.externalFlexNumber,
+    customSourceHash: profile.customSourceHash,
+    customCalleeHash: profile.customCalleeHash,
   };
 }
 
@@ -77,6 +79,8 @@ export function dynamoDBToProfile(item: any): UserProfile {
     flexWorkerHandle: item.flexWorkerHandle,
     useExternalFlex: item.useExternalFlex,
     externalFlexNumber: item.externalFlexNumber,
+    customSourceHash: item.customSourceHash,
+    customCalleeHash: item.customCalleeHash,
   };
 }
 
