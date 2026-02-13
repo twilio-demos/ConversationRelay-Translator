@@ -13,9 +13,10 @@ import "./conversation.css";
 
 export type ConversationProps = {
   serverConversation: ConversationMessage[];
+  id: string;
 };
 
-export const Conversation = ({ serverConversation }: ConversationProps) => {
+export const Conversation = ({ serverConversation, id }: ConversationProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const {
     conversation,
@@ -25,11 +26,7 @@ export const Conversation = ({ serverConversation }: ConversationProps) => {
     setShowTranslations,
     conversationId,
     languages,
-    session,
-  } = useConversation(
-    serverConversation || [],
-    serverConversation?.[0]?.conversationId || ""
-  );
+  } = useConversation(serverConversation || [], id);
 
   // Auto-scroll to bottom when conversation updates
   useEffect(() => {

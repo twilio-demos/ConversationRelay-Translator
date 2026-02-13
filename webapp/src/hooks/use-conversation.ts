@@ -17,9 +17,7 @@ export const useConversation = (
     useState<ConversationMessage[]>(initialConversation);
 
   const [showTranslations, setShowTranslations] = useState(true);
-  const [isPolling, setIsPolling] = useState(
-    session?.callStatus == "connected"
-  );
+  const [isPolling, setIsPolling] = useState(true);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const callerMessages = useMemo(
@@ -43,7 +41,7 @@ export const useConversation = (
   );
 
   useEffect(() => {
-    if (!conversationId || conversationId === "Unknown" || !isPolling) {
+    if (!isPolling) {
       return;
     }
 
